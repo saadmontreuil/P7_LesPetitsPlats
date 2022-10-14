@@ -1,0 +1,138 @@
+* {
+    font-family: "Lato", sans-serif;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 42px;
+    padding-bottom: 17px;
+    color: #D04F4F;
+  }
+  
+  .search-panel {
+    background: #E7E7E7;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  .search_input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    outline: transparent;
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.25);
+  }
+  .search_btn {
+    border: none;
+    outline: transparent;
+    background: transparent;
+    font-size: 24px;
+  }
+  
+  .filters {
+    z-index: 1;
+    display: flex;
+    gap: 50px;
+  }
+  
+  .filter {
+    cursor: pointer;
+    position: relative;
+    width: 170px;
+    border-radius: 5px;
+    overflow: hidden;
+    align-self: flex-start;
+    transition: 0.3s all ease;
+  }
+  .fa-chevron-down {
+    position: absolute;
+    right: 20px;
+    top: 23px;
+    width: 12px;
+    height: 12px;
+    color: rgb(255, 255, 255);
+    
+  }
+  .filter_input {
+    width: 100%;
+    padding: 20px 50px 20px 20px;
+    background: transparent;
+    border: none;
+    outline: transparent;
+    color: #fff;
+  }
+  .filter_input::placeholder {
+    color: #fff;
+  }
+  .filterBlue {
+    background: #3282F7;
+  }
+  .filterVert {
+    background: #68D9A4;
+  }
+  .filterRouge {
+    background: #ED6454;
+  }
+  
+  .recipes {
+    display: flex;
+    margin-top: 50px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    column-gap: 20px;
+    row-gap: 50px;
+  }
+  
+  .recipe {
+    width: 380px;
+    background: #E7E7E7;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .recipeWrap {
+    padding: 0 20px 20px 20px;
+  }
+  .recipeHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+  }
+  .recipeTitle {
+    font-size: 18px;
+  }
+  .recipeDuration {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .recipeDuration i {
+    font-size: 20px;
+    color:#ED6454    ;
+    background: black;
+    border-radius: 50%;
+  }
+  .recipeContent {
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .recipeDescription {
+    margin: 0;
+    width: 50%;
+    height: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
