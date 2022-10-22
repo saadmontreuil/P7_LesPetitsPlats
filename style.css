@@ -42,7 +42,8 @@
   }
   
   .filters {
-    z-index: 1;
+    position: absolute;
+    z-index: 2;
     display: flex;
     gap: 50px;
   }
@@ -56,6 +57,37 @@
     align-self: flex-start;
     transition: 0.3s all ease;
   }
+  .filter_list {
+    display: none;
+    padding: 0 5px 10px 5px;
+    max-height: 400px;
+    overflow-y: scroll;
+  }
+  .filter_option {
+    cursor: pointer;
+    width: 100%;
+    display: block;
+    border-radius: 5px;
+    padding: 5px 15px;
+    color: #fff;
+    transition: 0.3s all ease;
+  }
+  .filter_option:hover {
+    background: white;
+    color: black;
+  }
+  .filter_option.active {
+    background: white;
+    color: black;
+  }
+  .filter_option-wrap {
+    width: 100%;
+  }
+
+  .filter.open {
+    width: 670px;
+  }
+
   .fa-chevron-down {
     position: absolute;
     right: 20px;
@@ -65,6 +97,24 @@
     color: rgb(255, 255, 255);
     
   }
+
+  .filter.open .fa-chevron-down {
+    transform: rotate(180deg);
+    top: 27px;
+  }
+
+  .filter.open .filter_list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .filter.open .filter_option-wrap {
+    width: 33%;
+    padding: 5px;
+  }
+  .filter.open .filter_option {
+    padding: 10px 15px;
+  }
+  
   .filter_input {
     width: 100%;
     padding: 20px 50px 20px 20px;
@@ -88,7 +138,7 @@
   
   .recipes {
     display: flex;
-    margin-top: 50px;
+    margin-top: 120px;
     flex-wrap: wrap;
     justify-content: space-between;
     column-gap: 20px;

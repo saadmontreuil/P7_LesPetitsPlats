@@ -1,11 +1,16 @@
 import { recipes } from "../data/recipes.js";
 
 
+
 let recipeArray = [];
 let recipeHTML = "";
 const recipesContainer = document.getElementById("recipes");
 const searchPanel = document.querySelector('#search-panel')
 const recipess = document.getElementsByClassName("recipes");
+const DOMFilterIngredients = document.querySelector('#filter_ingredients')
+const DOMFilterAppliance = document.querySelector('#filter_appliances')
+const DOMFilterUtensils = document.querySelector('#filter_utensils')
+const filtersInputValue = {ingredients: '', appliances: '', utensils: ''}
 let searchValue = ''
 
 //fonction Affichage des recettes sur la page
@@ -45,7 +50,7 @@ const getRecipes=(recipes)=> {
   recipeArray.forEach((element) => {
     recipeHTML += element.html; 
   });
-  recipess.innerHTML = "";
+  recipess.textContent = '';
   recipesContainer.innerHTML = recipeHTML;
 
 }
@@ -61,7 +66,7 @@ const getIngredients=(item)=>  {
 }
 
 //Affichage des recettes sur la page
-getRecipes(recipes);
+ getRecipes(recipes);
 
 const search = () => {
   const searchbarFilter = recipes.filter(({name,ingredients,description}) => JSON.stringify({name,ingredients,description}).toLowerCase().includes(searchValue));
@@ -78,3 +83,60 @@ searchPanel.addEventListener('submit', (event) => {
       search(searchValue)
   }
 })
+
+function getFilter({list, type}) {
+  return list.map((ingredient, id) =>
+      `<span class="filter_option-wrap"><span class="filter_option" data-id="${ingredient}" data-type="${type}">${ingredient}</span></span>`)
+      .join('')
+}
+
+function render(recipesList) {
+  const uniqueValueWithFiltersValue = getUniqueValues(recipesList, filtersInputValue)
+  uniqueValueWithFiltersValue.forEach(element => {
+      if (element.type === 'ingredients') DOMFilterIngredients.innerHTML = getFilter(element)
+      else if (element.type === 'appliances') DOMFilterAppliance.innerHTML = getFilter(element)
+      else if (element.type === 'utensils') DOMFilterUtensils.innerHTML = getFilter(element)
+  })
+}
+render(recipes);
+
+function getUniqueValues(arr,obj) {
+      const listIngredients = arr.map(({ingredients}) => ingredients.map(({ingredient}) => ingredient.toLowerCase())).flat()
+      const listAppliance = arr.map(({appliance}) => appliance.toLowerCase())
+      const listUtensils = arr.map(({ustensils}) => ustensils.map(utensil => utensil.toLowerCase())).flat()
+      const uniqueValue =  [
+          {list: [...new Set(listIngredients)],type: 'ingredients'},
+          {list: [...new Set(listAppliance)],type: 'appliances' },
+          {list: [...new Set(listUtensils)],type: 'utensils'}
+      ]
+      console.log(uniqueValue);
+      return Object.entries(obj).map(([filterType, filterValue]) => {
+          for (const {list, type} of uniqueValue) {
+              if (filterType === type) {
+                console.table(list);
+                  return {list: list.filter(e => e.includes(filterValue.toLowerCase())), type}
+              }
+          }
+      }).map(({list,type})=>({list:list.map(capitalizeElement),type}))
+  }
+
+  const capitalizeElement=(string)=> {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+document.addEventListener('click', ({target}) => {
+
+  if (target.classList.contains('fa-chevron-down')) {
+    openFilter(target)
+  }
+})
+const openFilter=(btn)=> {
+  const filters = document.querySelectorAll('.filter')
+  filters.forEach(filter => {
+      if (filter !== btn.parentElement) {
+          filter.classList.remove('open')
+      } else {
+          filter.classList.toggle('open')
+      }
+  })
+}
