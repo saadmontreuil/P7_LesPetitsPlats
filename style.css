@@ -16,7 +16,7 @@
     padding-bottom: 17px;
     color: #D04F4F;
   }
-  
+  /* searchBar */
   .search-panel {
     background: #E7E7E7;
     padding: 10px 24px;
@@ -40,6 +40,8 @@
     background: transparent;
     font-size: 24px;
   }
+
+  /* filters */
   
   .filters {
     position: absolute;
@@ -135,7 +137,7 @@
   .filterRouge {
     background: #ED6454;
   }
-  
+  /* recipes */
   .recipes {
     display: flex;
     margin-top: 120px;
@@ -187,7 +189,8 @@
     text-overflow: ellipsis;
   }
 
-  
+
+/* badges */
   .badges {
     padding-top: 25px;
     padding-bottom: 15px;
@@ -222,10 +225,10 @@
   .badges .badge-green:hover {
     background: #15d57a;
   }
-  .badges .badge-tomato {
+  .badges .badge-red {
     background: #ED6454;
   }
-  .badges .badge-tomato:hover {
+  .badges .badge-red:hover {
     background: #e83621;
   }
   .badges i {
