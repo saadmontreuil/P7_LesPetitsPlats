@@ -186,3 +186,48 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  
+  .badges {
+    padding-top: 25px;
+    padding-bottom: 15px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    column-gap: 10px;
+    row-gap: 5px;
+  }
+  .badges .badge {
+    cursor: pointer;
+  }
+  .badges > span {
+    cursor: auto;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    transition: 0.3s all ease;
+  }
+  .badges > span:hover {
+    color: #fff;
+  }
+  .badges .badge-blue {
+    background: #3282F7;
+  }
+  .badges .badge-blue:hover {
+    background: #0067ff;
+  }
+  .badges .badge-green {
+    background: #68D9A4;
+  }
+  .badges .badge-green:hover {
+    background: #15d57a;
+  }
+  .badges .badge-tomato {
+    background: #ED6454;
+  }
+  .badges .badge-tomato:hover {
+    background: #e83621;
+  }
+  .badges i {
+    font-size: 22px;
+  }

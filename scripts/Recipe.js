@@ -3,6 +3,7 @@ import { recipes } from "../data/recipes.js";
 
 
 let recipeArray = [];
+let badges = [];
 let recipeHTML = "";
 const recipesContainer = document.getElementById("recipes");
 const searchPanel = document.querySelector('#search-panel')
@@ -12,6 +13,7 @@ const DOMFilterAppliance = document.querySelector('#filter_appliances')
 const DOMFilterUtensils = document.querySelector('#filter_utensils')
 const filtersInputValue = {ingredients: '', appliances: '', utensils: ''}
 let searchValue = ''
+const DOMBadges = document.querySelector('#badges')
 
 //fonction Affichage des recettes sur la page
 const getRecipes=(recipes)=> {
@@ -65,14 +67,9 @@ const getIngredients=(item)=>  {
   } ${item.unit || ""} <br>`;
 }
 
-//Affichage des recettes sur la page
- getRecipes(recipes);
-
 const search = () => {
   const searchbarFilter = recipes.filter(({name,ingredients,description}) => JSON.stringify({name,ingredients,description}).toLowerCase().includes(searchValue));
-  console.log(searchbarFilter);
-  
-   getRecipes(searchbarFilter)
+   display(searchbarFilter)
 }
 
 searchPanel.addEventListener('submit', (event) => {
@@ -90,7 +87,8 @@ function getFilter({list, type}) {
       .join('')
 }
 
-function render(recipesList) {
+const display =(recipesList )=> {
+  getRecipes(recipesList);
   const uniqueValueWithFiltersValue = getUniqueValues(recipesList, filtersInputValue)
   uniqueValueWithFiltersValue.forEach(element => {
       if (element.type === 'ingredients') DOMFilterIngredients.innerHTML = getFilter(element)
@@ -98,7 +96,9 @@ function render(recipesList) {
       else if (element.type === 'utensils') DOMFilterUtensils.innerHTML = getFilter(element)
   })
 }
-render(recipes);
+
+
+display(recipes);
 
 function getUniqueValues(arr,obj) {
       const listIngredients = arr.map(({ingredients}) => ingredients.map(({ingredient}) => ingredient.toLowerCase())).flat()
@@ -113,24 +113,43 @@ function getUniqueValues(arr,obj) {
       return Object.entries(obj).map(([filterType, filterValue]) => {
           for (const {list, type} of uniqueValue) {
               if (filterType === type) {
-                console.table(list);
+                
                   return {list: list.filter(e => e.includes(filterValue.toLowerCase())), type}
               }
           }
       }).map(({list,type})=>({list:list.map(capitalizeElement),type}))
   }
 
-  const capitalizeElement=(string)=> {
+  function capitalizeElement(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 document.addEventListener('click', ({target}) => {
+  const badgeCloseBtn = target.closest('.badge')
+  const filterOption = target.closest('.filter_option')
+  
 
   if (target.classList.contains('fa-chevron-down')) {
     openFilter(target)
   }
+  if (filterOption) {
+    // clearInputAndRemoveAttr(filterOption.dataset.type)
+    const badgeExist = badges.some(({name}) => name === target.innerText)
+    console.log(badges);
+    if (!badgeExist) {
+        badges.push({type: target.dataset.type, name: target.innerText})
+    } else {
+        badges = badges.filter(({name}) => name !== target.innerText)
+    }
+    DOMBadges.innerHTML = getBadgesTemplate(badges)
+}
+if (badgeCloseBtn) {
+    badges = badges.filter(({name}) => name !== badgeCloseBtn.dataset.id)
+    DOMBadges.innerHTML = getBadgesTemplate(badges)
+}
+
 })
-const openFilter=(btn)=> {
+const openFilter =(btn)=> {
   const filters = document.querySelectorAll('.filter')
   filters.forEach(filter => {
       if (filter !== btn.parentElement) {
@@ -138,5 +157,28 @@ const openFilter=(btn)=> {
       } else {
           filter.classList.toggle('open')
       }
+  })
+}
+
+function getBadgesTemplate(badges) {
+  return badges.map(({name,type}) => {
+      let color = ''
+      if (type === 'ingredients') {
+          color = 'blue'
+      }else if (type === 'appliances') {
+          color = 'green'
+      }else if (type === 'utensils') {
+          color = 'tomato'
+      }
+      return ` 
+      <span class="btn btn-sm badge-${color}">
+          ${name} <span class="badge" data-id="${name}"><i class="fa-regular fa-circle-xmark"></i></span>
+      </span>
+  `}).join('')
+}
+
+function addActiveClass(badgesList) {
+  badgesList.forEach(({type, name}) => {
+      document.querySelector(`[data-type="${type}"][data-id="${name}"]`)?.classList.add('active')
   })
 }
