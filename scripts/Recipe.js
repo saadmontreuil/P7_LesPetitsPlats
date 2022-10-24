@@ -12,6 +12,7 @@ const UtensilsContainer = document.querySelector('#filter_utensils')
 const filtersInputValue = {ingredients: '', appliances: '', utensils: ''}
 let searchValue = ''
 const BadgesContainer = document.querySelector('#badges')
+const filterIngredients = Array.from(document.querySelectorAll('.filter_input'))
 
 
 
@@ -72,9 +73,6 @@ document.addEventListener('click', ({target}) => {
   const badgeCloseBtn = target.closest('.badge')
   const filterOption = target.closest('.filter_option')
   
-  if (target.classList.contains('fa-chevron-down')) {
-    openFilter(target)
-  }
   if (filterOption) {
     const badgeExist = badges.some(({name}) => name === target.innerText)
     console.log(badges);
@@ -101,3 +99,20 @@ const openFilter =(btn)=> {
       }
   })
 }
+document.addEventListener('click', ({target}) => {
+    if (target.classList.contains('fa-chevron-down')) {
+      openFilter(target)
+    }  
+  })
+
+  filterIngredients.forEach(input => {
+    input.addEventListener('input', ({target}) => {
+        const filterList = document.querySelector(`#filter_ingredients`)
+        console.log(filterList);
+        filtersInputValue[target.name] = target.value
+        const uniqueValueWithFiltersValue = getUniqueValues(recipes, filtersInputValue)
+        uniqueValueWithFiltersValue.forEach(element => {
+            if (element.type === 'ingredients') IngredientsContainer.innerHTML = getFilter(element)
+        })
+    })
+})
