@@ -11,29 +11,16 @@ const ApplianceContainer = document.querySelector('#filter_appliances')
 const UtensilsContainer = document.querySelector('#filter_utensils')
 const filtersInputValue = {ingredients: '', appliances: '', utensils: ''}
 let searchValue = ''
+const recipesContainer = document.getElementById("recipes");
 const BadgesContainer = document.querySelector('#badges')
 const filterIngredients = Array.from(document.querySelectorAll('.filter_input'))
 
 
 
-
-// search function is for getting recipes that match the search value
-const search = () => {
-  const searchbarFilter = recipes.filter(({name,ingredients,description}) => JSON.stringify({name,ingredients,description}).toLowerCase().includes(searchValue));
-   display(searchbarFilter)
-}
-//at the event of submit use the value of the input in search function
-searchPanel.addEventListener('submit', (event) => {
-  event.preventDefault()
-  searchValue = Object.fromEntries(new FormData(event.target)).search.trim().toLowerCase()
-  console.log(searchValue);
-  if (searchValue.length > 2) {
-      search(searchValue)
-  }
-})
 // display function is for displaying the recipes and the filters
-const display =(recipesList )=> {
-  getRecipes(recipesList);
+const display =(recipesList)=> {
+    noResult(recipesList.length);
+    recipesContainer.innerHTML = getRecipes(recipesList);
   const uniqueValueWithFiltersValue = getUniqueValues(recipesList, filtersInputValue)
   uniqueValueWithFiltersValue.forEach(element => {
       if (element.type === 'ingredients') IngredientsContainer.innerHTML = getFilter(element)
@@ -41,7 +28,7 @@ const display =(recipesList )=> {
       else if (element.type === 'utensils') UtensilsContainer.innerHTML = getFilter(element)
   })
 }
-display(recipes);
+ display(recipes);
 
 
 // filter function is for getting unique ingredients and appliances and utensils in the recipes
@@ -54,7 +41,6 @@ function getUniqueValues(arr,obj) {
           {list: [...new Set(listAppliance)],type: 'appliances' },
           {list: [...new Set(listUtensils)],type: 'utensils'}
       ]
-      console.log(uniqueValue);
       return Object.entries(obj).map(([filterType, filterValue]) => {
           for (const {list, type} of uniqueValue) {
               if (filterType === type) {
@@ -64,6 +50,28 @@ function getUniqueValues(arr,obj) {
           }
       }).map(({list,type})=>({list:list.map(capitalizeElement),type}))
 }
+
+
+// search function is for getting recipes that match the search value
+const search = () => {
+    const searchbarFilter = recipes.filter(({name,ingredients,description}) => JSON.stringify({name,ingredients,description}).toLowerCase().includes(searchValue));
+    console.log(searchbarFilter)
+     display(searchbarFilter)
+  }
+
+  
+  //at the event of submit use the value of the input in search function
+  searchPanel.addEventListener('submit', (event) => {
+    // debugger;
+      console.log('submit')
+    event.preventDefault()
+    searchValue = Object.fromEntries(new FormData(event.target)).search.trim().toLowerCase()
+    console.log(searchValue);
+    if (searchValue.length > 2) {
+        search(searchValue)
+    }
+  })
+
 // function for capitalizing the first letter of each item
 function capitalizeElement(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -115,4 +123,12 @@ document.addEventListener('click', ({target}) => {
             if (element.type === 'ingredients') IngredientsContainer.innerHTML = getFilter(element)
         })
     })
-})
+});
+function noResult(condition) {
+    const noResult = document.querySelector('.none')
+    if (condition) {
+        noResult.style.display = 'none'
+    } else {
+        noResult.style.display = 'block'
+    }
+}

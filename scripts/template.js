@@ -1,13 +1,14 @@
 
-let recipeArray = [];
-let recipeHTML = "";
-const recipesContainer = document.getElementById("recipes");
+
+
 
 //fonction Affichage des recettes sur la page
  export const getRecipes=(recipes)=> {
-  
 
-    recipeArray = recipes.map((recipe) => {
+ let recipeHTML = "";
+ let recipeArray =[];
+  
+  recipeArray = recipes.map((recipe) => {
       return {
         recipe: recipe,
         ingredients: recipe.ingredients.map(itemIngridient),
@@ -37,12 +38,14 @@ const recipesContainer = document.getElementById("recipes");
           `,
       };
     });
+    
     recipeArray.forEach((element) => {
       recipeHTML += element.html; 
     });
-    recipesContainer.innerHTML = recipeHTML;
+    // recipesContainer.innerHTML = recipeHTML;
+    return recipeHTML;
   
-  }
+}
   const  itemIngridient =(item)=> {
     return `${item.ingredient}`;
   }
