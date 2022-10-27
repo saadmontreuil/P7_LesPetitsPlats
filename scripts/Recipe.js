@@ -13,12 +13,12 @@ const filtersInputValue = {ingredients: '', appliances: '', utensils: ''}
 let searchValue = ''
 const recipesContainer = document.getElementById("recipes");
 const BadgesContainer = document.querySelector('#badges')
-const filterIngredients = Array.from(document.querySelectorAll('.filter_input'))
+const filterInput = Array.from(document.querySelectorAll('.filter_input'))
 
 
 
 // display function is for displaying the recipes and the filters
-const display =(recipesList)=> {
+const display =(recipesList, badges = [])=> {
     noResult(recipesList.length);
     recipesContainer.innerHTML = getRecipes(recipesList);
   const uniqueValueWithFiltersValue = getUniqueValues(recipesList, filtersInputValue)
@@ -27,6 +27,7 @@ const display =(recipesList)=> {
       else if (element.type === 'appliances') ApplianceContainer.innerHTML = getFilter(element)
       else if (element.type === 'utensils') UtensilsContainer.innerHTML = getFilter(element)
   })
+  BadgesContainer.innerHTML = getBadges(badges)
 }
  display(recipes);
 
@@ -53,10 +54,17 @@ function getUniqueValues(arr,obj) {
 
 
 // search function is for getting recipes that match the search value
-const search = () => {
+const search = (badges) => {
     const searchbarFilter = recipes.filter(({name,ingredients,description}) => JSON.stringify({name,ingredients,description}).toLowerCase().includes(searchValue));
-    console.log(searchbarFilter)
-     display(searchbarFilter)
+    const filterRecipes = searchbarFilter.filter(({ingredients, appliance, ustensils}) => {
+        if (!badges.length) {return true}
+        return badges.every(({name, type}) => {
+            if (type === 'ingredients') {return ingredients.some(({ingredient}) => ingredient.toLowerCase() === name.toLowerCase())}
+            if (type === 'appliances') {return appliance.toLowerCase() === name.toLowerCase()}
+            if (type === 'utensils') {return ustensils.some((utensil) => utensil.toLowerCase() === name.toLowerCase())}
+        })
+    })
+     display(filterRecipes,badges)
   }
 
   
@@ -68,7 +76,7 @@ const search = () => {
     searchValue = Object.fromEntries(new FormData(event.target)).search.trim().toLowerCase()
     console.log(searchValue);
     if (searchValue.length > 2) {
-        search(searchValue)
+        search(badges)
     }
   })
 
@@ -89,11 +97,11 @@ document.addEventListener('click', ({target}) => {
     } else {
         badges = badges.filter(({name}) => name !== target.innerText)
     }
-    BadgesContainer.innerHTML = getBadges(badges)
+    search(badges)
 }
 if (badgeCloseBtn) {
     badges = badges.filter(({name}) => name !== badgeCloseBtn.dataset.id)
-    BadgesContainer.innerHTML = getBadges(badges)
+    search(badges)
 }
 
 })
@@ -113,15 +121,12 @@ document.addEventListener('click', ({target}) => {
     }  
   })
 
-  filterIngredients.forEach(input => {
+  filterInput.forEach(input => {
     input.addEventListener('input', ({target}) => {
         const filterList = document.querySelector(`#filter_ingredients`)
         console.log(filterList);
         filtersInputValue[target.name] = target.value
-        const uniqueValueWithFiltersValue = getUniqueValues(recipes, filtersInputValue)
-        uniqueValueWithFiltersValue.forEach(element => {
-            if (element.type === 'ingredients') IngredientsContainer.innerHTML = getFilter(element)
-        })
+        search(badges)
     })
 });
 function noResult(condition) {
