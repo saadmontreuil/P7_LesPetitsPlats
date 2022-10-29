@@ -55,6 +55,7 @@ function getUniqueValues(arr,obj) {
 
 // search function is for getting recipes that match the search value
 const search = (badges) => {
+
     const searchbarFilter = recipes.filter(({name,ingredients,description}) => JSON.stringify({name,ingredients,description}).toLowerCase().includes(searchValue));
     const filterRecipes = searchbarFilter.filter(({ingredients, appliance, ustensils}) => {
         if (!badges.length) {return true}
@@ -71,12 +72,14 @@ const search = (badges) => {
   //at the event of submit use the value of the input in search function
   searchPanel.addEventListener('submit', (event) => {
     // debugger;
-      console.log('submit')
+      
     event.preventDefault()
     searchValue = Object.fromEntries(new FormData(event.target)).search.trim().toLowerCase()
-    console.log(searchValue);
     if (searchValue.length > 2) {
         search(badges)
+    }
+    if (searchValue.length === 0) {
+        display(recipes);
     }
   })
 
@@ -91,7 +94,6 @@ document.addEventListener('click', ({target}) => {
   
   if (filterOption) {
     const badgeExist = badges.some(({name}) => name === target.innerText)
-    console.log(badges);
     if (!badgeExist) {
         badges.push({type: target.dataset.type, name: target.innerText})
     } else {
@@ -124,7 +126,6 @@ document.addEventListener('click', ({target}) => {
   filterInput.forEach(input => {
     input.addEventListener('input', ({target}) => {
         const filterList = document.querySelector(`#filter_ingredients`)
-        console.log(filterList);
         filtersInputValue[target.name] = target.value
         search(badges)
     })
