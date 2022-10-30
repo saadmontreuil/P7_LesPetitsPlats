@@ -53,22 +53,83 @@ function getUniqueValues(arr,obj) {
 }
 
 
-// search function is for getting recipes that match the search value
+// search function with loops to get recipes that match the search value
 const search = (badges) => {
+    const searchbarFilter = []
+    const filterRecipes = []
+    let badge = false
+    for (let i = 0; i < recipes.length; i++) {
+        const regex = new RegExp(searchValue, "g");
+        console.log(regex)
+        const {name,ingredients,description} = recipes[i]
+        if (JSON.stringify({name,ingredients,description}).toLowerCase().match(regex)) {
+            searchbarFilter.push(recipes[i])
+        }
+    }
+    if (badges.length){
+        for (let i = 0; i < badges.length; i++) {
+            const {name, type} = badges[i]
+            for (let k = 0; k < searchbarFilter.length; k++) {
+                badge = someValues(name, type, searchbarFilter[k])
+                if (badge) {
+                    filterRecipes.push(searchbarFilter[k])
+                }
+            }
+        }
+    }else {
+        filterRecipes.push(...searchbarFilter)
+    }
+    if (badges.length < 2) {
+        display(filterRecipes, badges)
+    } else {
+        console.log("deplucate")
+        display(noDuplication(filterRecipes), badges)
+    }
+}
+const noDuplication=(arr)=> {
+    const recipes = []
+    // debugger
+    for (let i = 0; i <= arr.length; i++) {
+        for (let k = 0; k <= arr.length; k++) {
+            if (i !== k && arr[i] === arr[k] && recipes.indexOf(arr[i]) === -1) {
+                recipes.push(arr[i]);
+                break;
+            }
+        }
+    }
+    return recipes
+}
 
-    const searchbarFilter = recipes.filter(({name,ingredients,description}) => JSON.stringify({name,ingredients,description}).toLowerCase().includes(searchValue));
-    const filterRecipes = searchbarFilter.filter(({ingredients, appliance, ustensils}) => {
-        if (!badges.length) {return true}
-        return badges.every(({name, type}) => {
-            if (type === 'ingredients') {return ingredients.some(({ingredient}) => ingredient.toLowerCase() === name.toLowerCase())}
-            if (type === 'appliances') {return appliance.toLowerCase() === name.toLowerCase()}
-            if (type === 'utensils') {return ustensils.some((utensil) => utensil.toLowerCase() === name.toLowerCase())}
-        })
-    })
-     display(filterRecipes,badges)
-  }
+const someValues=(name, type, element)=> {
+    let badge = false
+    const {ingredients, appliance, ustensils} = element
+    if (type === 'ingredients') {
+        for (let i = 0; i < ingredients.length; i++) {
+            let condition = ingredients[i].ingredient.toLowerCase() === name.toLowerCase()
+            if (condition) {
+                badge = true
+                break
+            }
+        }
+    }
+    if (type === 'appliances') {
+        if (appliance === name) {
+            badge = true
+        }
+    }
+    if (type === 'utensils') {
+        for (let i = 0; i < ustensils.length; i++) {
+            let condition = ustensils[i].toLowerCase() === name.toLowerCase()
+            if (condition) {
+                badge = true
+                break
+            }
+        }
+    }
+    console.log(badge)
+    return badge
+}
 
-  
   //at the event of submit use the value of the input in search function
   searchPanel.addEventListener('submit', (event) => {
     // debugger;
