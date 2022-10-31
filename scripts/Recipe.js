@@ -46,8 +46,16 @@ function getUniqueValues(arr,obj) {
       return Object.entries(obj).map(([filterType, filterValue]) => {
           for (const {list, type} of uniqueValue) {
               if (filterType === type) {
+                // list.filter(e => e.includes(filterValue.toLowerCase()))
+                for(let i = 0; i < list.length; i++){
+                    if(!list[i].includes(filterValue.toLowerCase())){
+                        list.splice(i, 1);
+                        i--;
+                        console.log(test);
+                    }
+                }
                 
-                  return {list: list.filter(e => e.includes(filterValue.toLowerCase())), type}
+                  return {list: list, type}
               }
           }
       }).map(({list,type})=>({list:list.map(capitalizeElement),type}))
@@ -61,7 +69,6 @@ const search = (badges) => {
     let badge = false
     for (let i = 0; i < recipes.length; i++) {
         const regex = new RegExp(searchValue, "g");
-        console.log(regex)
         const {name,ingredients,description} = recipes[i]
         if (JSON.stringify({name,ingredients,description}).toLowerCase().match(regex)) {
             searchbarFilter.push(recipes[i])
@@ -159,12 +166,25 @@ document.addEventListener('click', ({target}) => {
     if (!badgeExist) {
         badges.push({type: target.dataset.type, name: target.innerText})
     } else {
-        badges = badges.filter(({name}) => name !== target.innerText)
+        // badges = badges.filter(({name}) => name !== target.innerText)
+        for(let i = 0; i < badges.length; i++){
+            if(badges[i].name === target.innerText){
+                badges.splice(i, 1);
+
+            }
+        }
     }
     search(badges)
 }
 if (badgeCloseBtn) {
-    badges = badges.filter(({name}) => name !== badgeCloseBtn.dataset.id)
+
+    // badges = badges.filter(({name}) => name !== badgeCloseBtn.dataset.id)
+    for(let i = 0; i < badges.length; i++){
+        if(badges[i].name === badgeCloseBtn.dataset.id){
+            badges.splice(i, 1)
+        }
+    }
+
     search(badges)
 }
 
