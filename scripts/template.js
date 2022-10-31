@@ -42,7 +42,6 @@
     recipeArray.forEach((element) => {
       recipeHTML += element.html; 
     });
-    // recipesContainer.innerHTML = recipeHTML;
     return recipeHTML;
   
 }

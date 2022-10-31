@@ -22,11 +22,12 @@ const display =(recipesList, badges = [])=> {
     noResult(recipesList.length);
     recipesContainer.innerHTML = getRecipes(recipesList);
   const uniqueValueWithFiltersValue = getUniqueValues(recipesList, filtersInputValue)
-  uniqueValueWithFiltersValue.forEach(element => {
-      if (element.type === 'ingredients') IngredientsContainer.innerHTML = getFilter(element)
-      else if (element.type === 'appliances') ApplianceContainer.innerHTML = getFilter(element)
-      else if (element.type === 'utensils') UtensilsContainer.innerHTML = getFilter(element)
-  })
+
+for (let i=0; i < uniqueValueWithFiltersValue.length ; i++){
+    if (uniqueValueWithFiltersValue[i].type === 'ingredients') IngredientsContainer.innerHTML = getFilter(uniqueValueWithFiltersValue[i])
+    if (uniqueValueWithFiltersValue[i].type === 'appliances') ApplianceContainer.innerHTML = getFilter(uniqueValueWithFiltersValue[i])
+    if (uniqueValueWithFiltersValue[i].type === 'utensils') UtensilsContainer.innerHTML = getFilter(uniqueValueWithFiltersValue[i])
+}
   BadgesContainer.innerHTML = getBadges(badges)
 }
  display(recipes);
@@ -170,13 +171,14 @@ if (badgeCloseBtn) {
 })
 const openFilter =(btn)=> {
   const filters = document.querySelectorAll('.filter')
-  filters.forEach(filter => {
-      if (filter !== btn.parentElement) {
-          filter.classList.remove('open')
-      } else {
-          filter.classList.toggle('open')
-      }
-  })
+
+for(let i=0; i<filters.length; i++){
+    if (filters[i] !== btn.parentElement) {
+        filters[i].classList.remove('open')
+    } else {
+        filters[i].classList.toggle('open')
+    }
+}
 }
 document.addEventListener('click', ({target}) => {
     if (target.classList.contains('fa-chevron-down')) {
@@ -184,13 +186,14 @@ document.addEventListener('click', ({target}) => {
     }  
   })
 
-  filterInput.forEach(input => {
-    input.addEventListener('input', ({target}) => {
+
+for(let i=0; i<filterInput.length; i++){
+    filterInput[i].addEventListener('input', ({target}) => {
         const filterList = document.querySelector(`#filter_ingredients`)
         filtersInputValue[target.name] = target.value
         search(badges)
     })
-});
+}
 function noResult(condition) {
     const noResult = document.querySelector('.none')
     if (condition) {
