@@ -58,6 +58,11 @@ function getUniqueValues(arr,obj) {
                   return {list: list, type}
               }
           }
+        //   list.map(capitalizeElement)
+        for(let i = 0; i < list.length; i++){
+            list[i] = capitalizeElement(list[i])
+            console.log(list)
+        }
       }).map(({list,type})=>({list:list.map(capitalizeElement),type}))
 }
 
