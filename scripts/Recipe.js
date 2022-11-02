@@ -35,9 +35,27 @@ for (let i=0; i < uniqueValueWithFiltersValue.length ; i++){
 
 // filter function is for getting unique ingredients and appliances and utensils in the recipes
 function getUniqueValues(arr,obj) {
-      const listIngredients = arr.map(({ingredients}) => ingredients.map(({ingredient}) => ingredient.toLowerCase())).flat()
-      const listAppliance = arr.map(({appliance}) => appliance.toLowerCase())
-      const listUtensils = arr.map(({ustensils}) => ustensils.map(utensil => utensil.toLowerCase())).flat()
+    const listIngredients =[];
+    const listAppliance =[];
+    const listUtensils =[];
+    //   const listIngredients = arr.map(({ingredients}) => ingredients.map(({ingredient}) => ingredient.toLowerCase())).flat()
+    for(let i = 0; i < arr.length; i++){
+        for(let k = 0; k < arr[i].ingredients.length; k++){
+            listIngredients.push(arr[i].ingredients[k].ingredient.toLowerCase())
+            console.log("test")
+        }
+
+    }
+    //   const listAppliance = arr.map(({appliance}) => appliance.toLowerCase())
+    for(let i = 0; i < arr.length; i++){
+        listAppliance.push(arr[i].appliance.toLowerCase())
+    }
+    //   const listUtensils = arr.map(({ustensils}) => ustensils.map(utensil => utensil.toLowerCase())).flat()
+    for(let i = 0; i < arr.length; i++){
+        for(let k = 0; k < arr[i].ustensils.length; k++){
+            listUtensils.push(arr[i].ustensils[k].toLowerCase())
+        }
+    }
       const uniqueValue =  [
           {list: [...new Set(listIngredients)],type: 'ingredients'},
           {list: [...new Set(listAppliance)],type: 'appliances' },
@@ -51,19 +69,18 @@ function getUniqueValues(arr,obj) {
                     if(!list[i].includes(filterValue.toLowerCase())){
                         list.splice(i, 1);
                         i--;
-                        console.log(test);
                     }
                 }
                 
                   return {list: list, type}
               }
-          }
-        //   list.map(capitalizeElement)
+                      //   list.map(capitalizeElement)
         for(let i = 0; i < list.length; i++){
             list[i] = capitalizeElement(list[i])
-            console.log(list)
         }
-      }).map(({list,type})=>({list:list.map(capitalizeElement),type}))
+          }
+
+      }).map(({list,type})=>({list:list,type}))
 }
 
 
