@@ -70,16 +70,16 @@ const search = (badges) => {
 
   
   //at the event of submit use the value of the input in search function
-  searchPanel.addEventListener('submit', (event) => {
+  searchPanel.addEventListener('input', (event) => {
     // debugger;
       
     event.preventDefault()
-    searchValue = Object.fromEntries(new FormData(event.target)).search.trim().toLowerCase()
+    searchValue = event.target.value.trim().toLowerCase()
     if (searchValue.length > 2) {
         search(badges)
     }
     if (searchValue.length === 0) {
-        display(recipes);
+        search(badges)
     }
   })
 
