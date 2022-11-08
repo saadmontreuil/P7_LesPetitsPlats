@@ -34,9 +34,9 @@ const display =(recipesList, badges = [])=> {
 
 // filter function is for getting unique ingredients and appliances and utensils in the recipes
 function getUniqueValues(arr,obj) {
-      const listIngredients = arr.map(({ingredients}) => ingredients.map(({ingredient}) => ingredient.toLowerCase())).flat()
-      const listAppliance = arr.map(({appliance}) => appliance.toLowerCase())
-      const listUtensils = arr.map(({ustensils}) => ustensils.map(utensil => utensil.toLowerCase())).flat()
+      const listIngredients = arr.map(({ingredients}) => ingredients.map(({ingredient}) => ingredient.toLowerCase())).flat().sort()
+      const listAppliance = arr.map(({appliance}) => appliance.toLowerCase()).sort()
+      const listUtensils = arr.map(({ustensils}) => ustensils.map(utensil => utensil.toLowerCase())).flat().sort()
       const uniqueValue =  [
           {list: [...new Set(listIngredients)],type: 'ingredients'},
           {list: [...new Set(listAppliance)],type: 'appliances' },
