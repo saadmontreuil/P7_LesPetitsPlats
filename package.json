@@ -1,0 +1,31 @@
+{
+  "name": "p7",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saadmontreuil/P7_LesPetitsPlats.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saadmontreuil/P7_LesPetitsPlats/issues"
+  },
+  "homepage": "https://github.com/saadmontreuil/P7_LesPetitsPlats#readme",
+  "devDependencies": {
+    "eslint": "^8.27.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
+  },
+  "eslintConfig": {
+    "rules": {
+      "no-console": "off",
+      "no-unused-vars": 1,
+      "no-shadow": "off"
+    }
+  }
+}
