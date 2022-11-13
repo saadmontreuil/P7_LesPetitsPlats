@@ -1,4 +1,10 @@
 // fonction Affichage des recettes sur la page
+const itemIngridient = (item) => `${item.ingredient}`;
+
+const getIngredients = (item) => `<li class="item">${item.ingredient}: ${
+  item.quantity || ''
+} ${item.unit || ''} <br>`;
+
 export const getRecipes = (recipes) => {
   let recipeHTML = '';
   let recipeArray = [];
@@ -37,11 +43,6 @@ export const getRecipes = (recipes) => {
   });
   return recipeHTML;
 };
-const itemIngridient = (item) => `${item.ingredient}`;
-
-const getIngredients = (item) => `<li class="item">${item.ingredient}: ${
-  item.quantity || ''
-} ${item.unit || ''} <br>`;
 
 export const getFilter = ({ list, type }) => list.map((ingredient) => `<span class="filter_option-wrap"><span class="filter_option" data-id="${ingredient}" data-type="${type}">${ingredient}</span></span>`)
   .join('');

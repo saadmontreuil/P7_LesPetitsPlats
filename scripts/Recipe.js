@@ -1,3 +1,7 @@
+/* eslint-disable no-shadow */
+/* eslint-disable no-plusplus */
+/* eslint-disable max-len */
+/* eslint-disable no-restricted-syntax */
 import { recipes } from '../data/recipes.js';
 import { getRecipes, getFilter, getBadges } from './template.js';
 
@@ -12,20 +16,10 @@ const recipesContainer = document.getElementById('recipes');
 const BadgesContainer = document.querySelector('#badges');
 const filterInput = Array.from(document.querySelectorAll('.filter_input'));
 
-// display function is for displaying the recipes and the filters
-const display = (recipesList, badges = []) => {
-  noResult(recipesList.length);
-  recipesContainer.innerHTML = getRecipes(recipesList);
-  const uniqueValueWithFiltersValue = getUniqueValues(recipesList, filtersInputValue);
-
-  for (let i = 0; i < uniqueValueWithFiltersValue.length; i++) {
-    if (uniqueValueWithFiltersValue[i].type === 'ingredients') IngredientsContainer.innerHTML = getFilter(uniqueValueWithFiltersValue[i]);
-    if (uniqueValueWithFiltersValue[i].type === 'appliances') ApplianceContainer.innerHTML = getFilter(uniqueValueWithFiltersValue[i]);
-    if (uniqueValueWithFiltersValue[i].type === 'utensils') UtensilsContainer.innerHTML = getFilter(uniqueValueWithFiltersValue[i]);
-  }
-  BadgesContainer.innerHTML = getBadges(badges);
-};
-display(recipes);
+// function for capitalizing the first letter of each item
+function capitalizeElement(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 // filter function is for getting unique ingredients and appliances and utensils in the recipes
 function getUniqueValues(arr, obj) {
@@ -75,38 +69,30 @@ function getUniqueValues(arr, obj) {
   }).map(({ list, type }) => ({ list, type }));
 }
 
-// search function with loops to get recipes that match the search value
-const search = (badges) => {
-  const searchbarFilter = [];
-  const filterRecipes = [];
-  let badge = false;
-  for (let i = 0; i < recipes.length; i++) {
-    const regex = new RegExp(searchValue, 'g');
-    const { name, ingredients, description } = recipes[i];
-    if (JSON.stringify({ name, ingredients, description }).toLowerCase().match(regex)) {
-      searchbarFilter.push(recipes[i]);
-    }
-  }
-  if (badges.length) {
-    for (let i = 0; i < badges.length; i++) {
-      const { name, type } = badges[i];
-      for (let k = 0; k < searchbarFilter.length; k++) {
-        badge = someValues(name, type, searchbarFilter[k]);
-        if (badge) {
-          filterRecipes.push(searchbarFilter[k]);
-        }
-      }
-    }
+const noResult = (condition) => {
+  const noResult = document.querySelector('.none');
+  if (condition) {
+    noResult.style.display = 'none';
   } else {
-    filterRecipes.push(...searchbarFilter);
-  }
-  if (badges.length < 2) {
-    display(filterRecipes, badges);
-  } else {
-    console.log('deplucate');
-    display(noDuplication(filterRecipes), badges);
+    noResult.style.display = 'block';
   }
 };
+
+// display function is for displaying the recipes and the filters
+const display = (recipesList, badges = []) => {
+  noResult(recipesList.length);
+  recipesContainer.innerHTML = getRecipes(recipesList);
+  const uniqueValueWithFiltersValue = getUniqueValues(recipesList, filtersInputValue);
+
+  for (let i = 0; i < uniqueValueWithFiltersValue.length; i++) {
+    if (uniqueValueWithFiltersValue[i].type === 'ingredients') IngredientsContainer.innerHTML = getFilter(uniqueValueWithFiltersValue[i]);
+    if (uniqueValueWithFiltersValue[i].type === 'appliances') ApplianceContainer.innerHTML = getFilter(uniqueValueWithFiltersValue[i]);
+    if (uniqueValueWithFiltersValue[i].type === 'utensils') UtensilsContainer.innerHTML = getFilter(uniqueValueWithFiltersValue[i]);
+  }
+  BadgesContainer.innerHTML = getBadges(badges);
+};
+display(recipes);
+
 const noDuplication = (arr) => {
   const recipes = [];
   // debugger
@@ -151,6 +137,39 @@ const someValues = (name, type, element) => {
   return badge;
 };
 
+// search function with loops to get recipes that match the search value
+const search = (badges) => {
+  const searchbarFilter = [];
+  const filterRecipes = [];
+  let badge = false;
+  for (let i = 0; i < recipes.length; i++) {
+    const regex = new RegExp(searchValue, 'g');
+    const { name, ingredients, description } = recipes[i];
+    if (JSON.stringify({ name, ingredients, description }).toLowerCase().match(regex)) {
+      searchbarFilter.push(recipes[i]);
+    }
+  }
+  if (badges.length) {
+    for (let i = 0; i < badges.length; i++) {
+      const { name, type } = badges[i];
+      for (let k = 0; k < searchbarFilter.length; k++) {
+        badge = someValues(name, type, searchbarFilter[k]);
+        if (badge) {
+          filterRecipes.push(searchbarFilter[k]);
+        }
+      }
+    }
+  } else {
+    filterRecipes.push(...searchbarFilter);
+  }
+  if (badges.length < 2) {
+    display(filterRecipes, badges);
+  } else {
+    console.log('deplucate');
+    display(noDuplication(filterRecipes), badges);
+  }
+};
+
 // at the event of submit use the value of the input in search function
 searchPanel.addEventListener('input', (event) => {
   // debugger;
@@ -167,10 +186,6 @@ searchPanel.addEventListener('input', (event) => {
   }
 });
 
-// function for capitalizing the first letter of each item
-function capitalizeElement(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
 // at the event of click on the items add them to the badges
 document.addEventListener('click', ({ target }) => {
   const badgeCloseBtn = target.closest('.badge');
@@ -220,16 +235,7 @@ document.addEventListener('click', ({ target }) => {
 
 for (let i = 0; i < filterInput.length; i++) {
   filterInput[i].addEventListener('input', ({ target }) => {
-    const filterList = document.querySelector('#filter_ingredients');
     filtersInputValue[target.name] = target.value;
     search(badges);
   });
-}
-function noResult(condition) {
-  const noResult = document.querySelector('.none');
-  if (condition) {
-    noResult.style.display = 'none';
-  } else {
-    noResult.style.display = 'block';
-  }
 }
