@@ -1,7 +1,15 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable max-len */
+/* eslint-disable no-shadow */
 /* eslint-disable import/extensions */
 
 import { recipes } from '../data/recipes.js';
 import { getRecipes, getFilter, getBadges } from './template.js';
+
+// function for capitalizing the first letter of each item
+function capitalizeElement(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 let badges = [];
 const searchPanel = document.querySelector('#search-panel');
@@ -13,20 +21,6 @@ let searchValue = '';
 const recipesContainer = document.getElementById('recipes');
 const BadgesContainer = document.querySelector('#badges');
 const filterInput = Array.from(document.querySelectorAll('.filter_input'));
-
-// display function is for displaying the recipes and the filters
-const display = (recipesList, badges = []) => {
-  noResult(recipesList.length);
-  recipesContainer.innerHTML = getRecipes(recipesList);
-  const uniqueValueWithFiltersValue = getUniqueValues(recipesList, filtersInputValue);
-  uniqueValueWithFiltersValue.forEach((element) => {
-    if (element.type === 'ingredients') IngredientsContainer.innerHTML = getFilter(element);
-    else if (element.type === 'appliances') ApplianceContainer.innerHTML = getFilter(element);
-    else if (element.type === 'utensils') UtensilsContainer.innerHTML = getFilter(element);
-  });
-  BadgesContainer.innerHTML = getBadges(badges);
-};
-display(recipes);
 
 // filter function is for getting unique ingredients and appliances and utensils in the recipes
 function getUniqueValues(arr, obj) {
@@ -44,8 +38,32 @@ function getUniqueValues(arr, obj) {
         return { list: list.filter((e) => e.includes(filterValue.toLowerCase())), type };
       }
     }
+    return undefined;
   }).map(({ list, type }) => ({ list: list.map(capitalizeElement), type }));
 }
+
+function noResult(condition) {
+  const noResult = document.querySelector('.none');
+  if (condition) {
+    noResult.style.display = 'none';
+  } else {
+    noResult.style.display = 'block';
+  }
+}
+
+// display function is for displaying the recipes and the filters
+const display = (recipesList, badges = []) => {
+  noResult(recipesList.length);
+  recipesContainer.innerHTML = getRecipes(recipesList);
+  const uniqueValueWithFiltersValue = getUniqueValues(recipesList, filtersInputValue);
+  uniqueValueWithFiltersValue.forEach((element) => {
+    if (element.type === 'ingredients') IngredientsContainer.innerHTML = getFilter(element);
+    else if (element.type === 'appliances') ApplianceContainer.innerHTML = getFilter(element);
+    else if (element.type === 'utensils') UtensilsContainer.innerHTML = getFilter(element);
+  });
+  BadgesContainer.innerHTML = getBadges(badges);
+};
+display(recipes);
 
 // search function is for getting recipes that match the search value
 const search = (badges) => {
@@ -58,6 +76,7 @@ const search = (badges) => {
       if (type === 'ingredients') { return ingredients.some(({ ingredient }) => ingredient.toLowerCase() === name.toLowerCase()); }
       if (type === 'appliances') { return appliance.toLowerCase() === name.toLowerCase(); }
       if (type === 'utensils') { return ustensils.some((utensil) => utensil.toLowerCase() === name.toLowerCase()); }
+      return undefined;
     });
   });
   display(filterRecipes, badges);
@@ -78,10 +97,6 @@ searchPanel.addEventListener('input', (event) => {
   }
 });
 
-// function for capitalizing the first letter of each item
-function capitalizeElement(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
 // at the event of click on the items add them to the badges
 document.addEventListener('click', ({ target }) => {
   const badgeCloseBtn = target.closest('.badge');
@@ -119,16 +134,7 @@ document.addEventListener('click', ({ target }) => {
 
 filterInput.forEach((input) => {
   input.addEventListener('input', ({ target }) => {
-    const filterList = document.querySelector('#filter_ingredients');
     filtersInputValue[target.name] = target.value;
     search(badges);
   });
 });
-function noResult(condition) {
-  const noResult = document.querySelector('.none');
-  if (condition) {
-    noResult.style.display = 'none';
-  } else {
-    noResult.style.display = 'block';
-  }
-}
