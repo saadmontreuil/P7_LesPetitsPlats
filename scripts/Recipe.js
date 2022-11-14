@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* eslint-disable no-shadow */
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
@@ -30,7 +31,6 @@ function getUniqueValues(arr, obj) {
   for (let i = 0; i < arr.length; i++) {
     for (let k = 0; k < arr[i].ingredients.length; k++) {
       listIngredients.push(arr[i].ingredients[k].ingredient.toLowerCase());
-      console.log('test');
     }
   }
   //   const listAppliance = arr.map(({appliance}) => appliance.toLowerCase())
@@ -66,6 +66,7 @@ function getUniqueValues(arr, obj) {
         list[i] = capitalizeElement(list[i]);
       }
     }
+    return undefined;
   }).map(({ list, type }) => ({ list, type }));
 }
 
@@ -133,12 +134,12 @@ const someValues = (name, type, element) => {
       }
     }
   }
-  console.log(badge);
   return badge;
 };
 
 // search function with loops to get recipes that match the search value
 const search = (badges) => {
+  console.time('search');
   const searchbarFilter = [];
   const filterRecipes = [];
   let badge = false;
@@ -165,9 +166,9 @@ const search = (badges) => {
   if (badges.length < 2) {
     display(filterRecipes, badges);
   } else {
-    console.log('deplucate');
     display(noDuplication(filterRecipes), badges);
   }
+  console.timeEnd('search');
 };
 
 // at the event of submit use the value of the input in search function
@@ -175,9 +176,8 @@ searchPanel.addEventListener('input', (event) => {
   // debugger;
 
   event.preventDefault();
-  console.log(event.target);
+
   searchValue = event.target.value.trim().toLowerCase();
-  console.log(searchValue);
   if (searchValue.length > 2) {
     search(badges);
   }
