@@ -67,8 +67,6 @@ display(recipes);
 
 // search function is for getting recipes that match the search value
 const search = (badges) => {
-  console.time('search');
-
   const searchbarFilter = recipes.filter(({ name, ingredients, description }) => JSON.stringify({ name, ingredients, description }).toLowerCase().includes(searchValue));
   const filterRecipes = searchbarFilter.filter(({ ingredients, appliance, ustensils }) => {
     if (!badges.length) { return true; }
@@ -80,7 +78,6 @@ const search = (badges) => {
     });
   });
   display(filterRecipes, badges);
-  console.timeEnd('search');
 };
 
 // at the event of submit use the value of the input in search function
